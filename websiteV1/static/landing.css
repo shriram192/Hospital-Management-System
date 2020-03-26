@@ -1,0 +1,37 @@
+body {
+    text-align: center;
+    font-family: "Ubuntu";
+}
+
+.navbar {
+    margin-top: 5rem;
+}
+
+.card-title {
+    font-size: 2rem;
+}
+
+.card-img-top {
+    align-self: center;
+    margin-top: 2rem;
+    width: 15rem;
+}
+
+.card {
+    border-radius: 10%;
+    margin: 1rem 0;
+}
+
+.h1 {
+    font-size: 3rem;
+}
+
+.heading {
+    padding-left: 0;
+}
+
+@media (max-width: 1024px) {
+    .navbar {
+        margin-top: 2rem;
+    }
+}

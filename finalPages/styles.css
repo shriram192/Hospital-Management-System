@@ -1,0 +1,76 @@
+body {
+    text-align: center;
+    font-family: "Ubuntu";
+}
+
+.navbar {
+    margin-top: .5rem;
+}
+
+.card-title {
+    font-size: 2rem;
+}
+
+.card-img-top {
+    align-self: center;
+    margin-top: 2rem;
+    width: 15rem;
+}
+
+.card {
+    border-radius: 1.5rem;
+    margin: .5rem 0;
+}
+
+.h1 {
+    font-size: 3rem;
+}
+
+.heading {
+    padding-left: 0;
+}
+
+
+/* Login Common */
+
+.login-heading {
+    margin: 1rem 6px;
+}
+
+.login-page {
+    margin-top: .5rem;
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 2rem;
+}
+
+.login-img {
+    margin: 1rem;
+}
+
+.form-label {
+    margin: .5rem;
+}
+
+.form-input {
+    margin: 0 23px;
+}
+
+.form-button {
+    margin: 0 23px 1rem;
+}
+
+.home-btn {
+    margin: 0;
+    padding: 0rem;
+}
+
+@media (max-width: 1024px) {
+    .navbar {
+        margin-top: 2rem;
+    }
+    .login-page {
+        margin: 1rem;
+    }
+}

@@ -1,0 +1,699 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <!-- CSS -->
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css'%}" /> -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <!-- Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Font Awesome -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+    ></script>
+    <!-- Font  -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  </head>
+
+  <body>
+    <div class="heading-container container">
+      <nav class="navbar navbar-expand-lg navbar-light heading">
+        <a class="navbar-brand" href="#">
+          <h1 class="h1">Admin Dashboard</h1>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <!-- Navbar -->
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#addModal"
+              >Add</a
+            >
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#updateModal"
+              >Update</a
+            >
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#removeModal"
+              >Remove</a
+            >
+            <a class="nav-item nav-link" href="">Logout</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Table -->
+      <table class="table table-hover">
+        <!-- Table Head -->
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Node ID</th>
+            <th scope="col">Microcontroller</th>
+            <th scope="col">Active/Passive</th>
+          </tr>
+        </thead>
+
+        <!-- table body -->
+        <tbody>
+          {% for node in nodes %}
+          <!-- Enter node id inside id attribute bellow -->
+          <!-- make sure you remove the quotation marks -->
+          <tr
+            class="node-info-table"
+            id="{{node.nid}}"
+            data-toggle="modal"
+            data-target="#nodeInfoModal"
+          >
+            <!-- name -->
+            <th scope="row">
+              {{node.name}}
+            </th>
+            <!-- node id -->
+            <td>{{node.nid}}</td>
+            <!-- Microcontroller -->
+            <td>
+              {{node.mc}}
+            </td>
+            <!-- active/passive -->
+            <td>
+              {{node.isActive}}
+            </td>
+            <!-- s1 -->
+            <td style="display: none;">
+              {{node.s1}}
+            </td>
+            <!-- s2 -->
+            <td style="display: none;">
+              {{node.s2}}
+            </td>
+            <!-- s3 -->
+            <td style="display: none;">
+              {{node.s3}}
+            </td>
+            <!-- s4 -->
+            <td style="display: none;">
+              {{node.s4}}
+            </td>
+            <!-- s5 -->
+            <td style="display: none;">
+              {{node.s5}}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Add Modal -->
+      <div
+        class="modal fade"
+        id="addModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="addModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addModalTitle">Add Node</h5>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'administrator:addNode' %}" method="POST">
+              {% csrf_token %}
+                <div class="form-group">
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="nName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="nName"
+                        placeholder="Enter Node Name"
+                        name="name"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Microcontroller -->
+                  <div
+                    class="row"
+                    style="margin-top: 0.5rem; margin-bottom:0.5rem;"
+                  >
+                    <div class="col-lg-3 form-label">
+                      <label for="microcontroller">Microcontroller</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        id="microcontroller"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="mc"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item microcontroller" href="#"
+                          >Arduino</a
+                        >
+                        <a class="dropdown-item microcontroller" href="#"
+                          >Raspberry Pi</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Sensors -->
+                  <!-- s1 -->
+                  <div class="row" style="margin-bottom:0.5rem;">
+                    <div class="col-lg-3 form-label">
+                      <label for="s1">S1</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        id="s1dd"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="s1"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item s1dd" href="#">1</a>
+                        <a class="dropdown-item s1dd" href="#">2</a>
+                        <a class="dropdown-item s1dd" href="#">3</a>
+                        <a class="dropdown-item s1dd" href="#">4</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- s2 -->
+                  <div class="row" style="margin-bottom:0.5rem;">
+                    <div class="col-lg-3 form-label">
+                      <label for="s2">S2</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        id="s2dd"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="s2"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item s2dd" href="#">1</a>
+                        <a class="dropdown-item s2dd" href="#">2</a>
+                        <a class="dropdown-item s2dd" href="#">3</a>
+                        <a class="dropdown-item s2dd" href="#">4</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- s3 -->
+                  <div class="row" style="margin-bottom:0.5rem;">
+                    <div class="col-lg-3 form-label">
+                      <label for="s3">S3</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        id="s3dd"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="s3"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item s3dd" href="#">1</a>
+                        <a class="dropdown-item s3dd" href="#">2</a>
+                        <a class="dropdown-item s3dd" href="#">3</a>
+                        <a class="dropdown-item s3dd" href="#">4</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- s4 -->
+                  <div class="row" style="margin-bottom:0.5rem;">
+                    <div class="col-lg-3 form-label">
+                      <label for="s4">S4</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        id="s4dd"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="s4"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item s4dd" href="#">1</a>
+                        <a class="dropdown-item s4dd" href="#">2</a>
+                        <a class="dropdown-item s4dd" href="#">3</a>
+                        <a class="dropdown-item s4dd" href="#">4</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- s5 -->
+                  <div class="row" style="margin-bottom:0.5rem;">
+                    <div class="col-lg-3 form-label">
+                      <label for="s5">S5</label>
+                    </div>
+                    <div class="btn-group col-lg-5">
+                      <button
+                        type="button"
+                        id="s5dd"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        name="s5"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item s5dd" href="#">1</a>
+                        <a class="dropdown-item s5dd" href="#">2</a>
+                        <a class="dropdown-item s5dd" href="#">3</a>
+                        <a class="dropdown-item s5dd" href="#">4</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Material switch -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="state">State</label>
+                    </div>
+                    <div class="col-lg-9" style="margin-top: 0.5rem;">
+                      <input
+                        type="checkbox"
+                        checked
+                        data-toggle="toggle"
+                        data-on="Active"
+                        data-off="Passive"
+                        data-onstyle="success"
+                        data-offstyle="danger"
+                        data-width="100px"
+                        name="switch"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer" style="margin-top: 2rem;">
+                    <!-- Foot Buttons -->
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger updateFoot"
+                      data-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-outline-dark updateFoot"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Modal -->
+      <div
+        class="modal fade"
+        id="updateModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="updateModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalTitle">Update Node</h5>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                <div class="form-group">
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="unName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="unName"
+                        placeholder="Enter Node Name"
+                        name=""
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Dropdown -->
+                  <div class="row">
+                    <div
+                      class="btn-group col-lg-3 col-md col-sm"
+                      style="margin-top: .5rem;"
+                    >
+                      <button
+                        type="button"
+                        id="updateDD"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item updateDD" href="#"
+                          >Microcontroller</a
+                        >
+                        <a class="dropdown-item updateDD" href="#">S1</a>
+                        <a class="dropdown-item updateDD" href="#">S2</a>
+                        <a class="dropdown-item updateDD" href="#">S3</a>
+                        <a class="dropdown-item updateDD" href="#">S4</a>
+                        <a class="dropdown-item updateDD" href="#">S5</a>
+                      </div>
+                    </div>
+                    <div
+                      class="btn-group col-lg-5"
+                      id="updateValue"
+                      style="margin-top: .5rem;"
+                    >
+                      <button
+                        type="button"
+                        id="updateInput"
+                        class="btn btn-outline-dark dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Select
+                      </button>
+                      <div class="dropdown-menu" id="ddmenu"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer" style="margin-top: 2rem;">
+                  <!-- Foot Buttons -->
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger updateFoot"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" class="btn btn-outline-dark updateFoot">
+                    Update
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remove Node -->
+      <div
+        class="modal fade"
+        id="removeModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="removeModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="removeModalTitle">Remove Node</h5>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                <div class="form-group">
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="rnName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="rnName"
+                        placeholder="Enter node name"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <!-- Foot Buttons -->
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-outline-dark">
+                Remove Node
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Node Info Modal -->
+      <div
+        class="modal fade"
+        id="nodeInfoModal"
+        tabindex="-1"
+        role="dialog"
+        aria-lablledby="nodeInfoModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="nodeInfoModalTitle">Node Details</h5>
+            </div>
+            <div class="modal-body">
+              <!-- node name -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    Node Name
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="inName"></h6>
+                </div>
+              </div>
+
+              <!-- node id -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    Node ID
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="inid"></h6>
+                </div>
+              </div>
+
+              <!-- Microcontroller -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    Microcontroller
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="inmc"></h6>
+                </div>
+              </div>
+
+              <!-- State -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    State
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="inState"></h6>
+                </div>
+              </div>
+
+              <!-- s1 -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    S1
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="ins1"></h6>
+                </div>
+              </div>
+
+              <!-- s2 -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    S2
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="ins2"></h6>
+                </div>
+              </div>
+
+              <!-- s3 -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    S3
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="ins3"></h6>
+                </div>
+              </div>
+
+              <!-- s4 -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    S4
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="ins4"></h6>
+                </div>
+              </div>
+
+              <!-- s5 -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">
+                    S5
+                  </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="ins5"></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src='{% static "adminDashboard.js"%}'></script>
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

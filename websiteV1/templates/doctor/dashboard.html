@@ -1,0 +1,466 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Doctor Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <!-- CSS -->
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css'%}" /> -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <!-- Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Font Awesome -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+    ></script>
+    <!-- Font  -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Heading -->
+    <div class="heading-container container">
+      <nav class="navbar navbar-expand-lg navbar-light heading">
+        <a class="navbar-brand" href="#">
+          <h1 class="h1">Doctor Dashboard</h1>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <!-- Navbar -->
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#addModal"
+              >Add</a
+            >
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#updateModal"
+              >Update</a
+            >
+            <a
+              class="nav-item nav-link"
+              href="#"
+              type="button"
+              data-toggle="modal"
+              data-target="#removeModal"
+              >Remove</a
+            >
+            <a class="nav-item nav-link" href="{% url 'doctor:logout'  %}">Logout</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Table -->
+      <table class="table table-hover">
+        <!-- Table Head -->
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Patient ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Blood Group</th>
+            <th scope="col" style="display: none;">Description</th>
+          </tr>
+        </thead>
+
+        <!-- Table Body -->
+        <tbody>
+        {% for patient in patients %}
+          <tr class="patient-info-table" id={{patient.pid}} data-toggle="modal" data-target="#patientInfoModal">
+            <!-- patientID -->
+            <th scope="row">{{patient.pid}}</th>
+
+            <!-- Name -->
+            <td>{{patient.name}}</td>
+
+            <!-- Age -->
+            <td>{{patient.age}}</td>
+
+            <!-- Blood Group -->
+            <td>{{patient.bg}}</td>
+
+            <!-- description -->
+            <td style="display: none;">{{patient.desc}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Add Modal -->
+      <div
+        class="modal fade"
+        id="addModal"
+        tabindex="-1"
+        role="dialog"
+        aria-lablledby="addModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addModalTitle">Add Patient</h5>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="{% url 'doctor:add' %}">
+                {% csrf_token %}
+                <div class="form-group">
+
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="patientName"
+                        placeholder="Enter Patient Name"
+                        name="name"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientAge">Age</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="patientAge"
+                        placeholder="Enter Patient Age"
+                        name="age"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Blood Group -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientBloodGroup">Blood Group</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="patientBloodGroup"
+                        placeholder="Enter Patient Blood Group"
+                        name="bg"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientDescription">Description</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <textarea
+                        class="form-control"
+                        id="patientDescription"
+                        rows="4"
+                        placeholder="Enter Patient Description"
+                        name="desc"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <!-- Foot Buttons -->
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-outline-dark">
+                Add Patient
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+
+      <!-- Update Modal -->
+      <div
+        class="modal fade"
+        id="updateModal"
+        tabindex="-1"
+        role="dialog"
+        aria-lablledby="updateModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalTitle">
+                Update Patient Details
+              </h5>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="{% url 'doctor:update' %}">
+              {% csrf_token %}
+                <div class="form-group">
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="patientName"
+                        placeholder="Enter Patient Name"
+                        name="name"
+                      />
+                    </div>
+                  </div>
+
+
+                  <!-- Dropdown -->
+                  <div class="row">
+                    <div class="btn-group col-lg-3 update-dropdown">
+                      <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item btn-dark updateAge" href="#" data-toggle="form-group" data-target="#updateAge">Age</a>
+                        <a class="dropdown-item btn-dark updateBG" href="#">Blood Group</a>
+                        <a class="dropdown-item btn-dark updateDescription" href="#">Description</a>
+                      </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="update-form-group">
+                          <!-- Update input gets appened here -->
+                          <!-- Insert django in 'doctorDashboard.js' -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <!-- Foot Buttons -->
+              <button
+                type="button"
+                class="btn btn-outline-danger updateFoot"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-outline-dark updateFoot">Update</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remove Modal -->
+      <div
+        class="modal fade"
+        id="removeModal"
+        tabindex="-1"
+        role="dialog"
+        aria-lablledby="removeModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="removeModalTitle">Remove Patient</h5>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="{% url 'doctor:remove'%}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <!-- Name -->
+                  <div class="row">
+                    <div class="col-lg-3 form-label">
+                      <label for="patientName">Name</label>
+                    </div>
+                    <div class="col-lg-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="patientName"
+                        placeholder="Enter Patient Name"
+                        name="name"
+                      />
+                    </div>
+                  </div>    
+                </div>
+            </div>
+            <div class="modal-footer">
+              <!-- Foot Buttons -->
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-outline-dark">
+                Remove Patient
+              </button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Patient Info Modal -->
+      <div
+        class="modal fade"
+        id="patientInfoModal"
+        tabindex="-1"
+        role="dialog"
+        aria-lablledby="patientInfoModalTitle"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="patientModalTitle">
+                Patient Details
+              </h5>
+            </div>
+            <div class="modal-body">
+              <!-- patientID -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">Patient ID</label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="patientID">
+                  </h6>
+                </div>
+              </div>
+
+              <!-- Name -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">Name</label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="name"></h6>
+                </div>
+              </div>
+
+              <!-- Age -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">Age</label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="age">
+                  </h6>
+                </div>
+              </div>
+
+              <!-- Blood Group -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">Blood Group </label>
+                </div>
+                <div class="col-lg-10">
+                  <h6 id="bloodGroup"></h6>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="row">
+                <div class="col-lg-2">
+                  <label class="form-label">Description </label>
+                </div>
+                <div class="col-lg-10">
+                  <p id="description">
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <!-- Foot Buttons -->
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <!-- <script src="{% static 'js/index.js'%}" charset="utf-8"></script> -->
+    <script src='{% static "dashboard.js"%}'></script>
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
